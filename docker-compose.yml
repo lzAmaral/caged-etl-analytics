@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: mercado-tech-db
+    environment:
+      POSTGRES_DB: mercadotech
+      POSTGRES_USER: mercadotech
+      POSTGRES_PASSWORD: mercadotech
+    ports:
+      - "5433:5432"
+    volumes:
+      - mercado_tech_data:/var/lib/postgresql/data
+
+volumes:
+  mercado_tech_data:
