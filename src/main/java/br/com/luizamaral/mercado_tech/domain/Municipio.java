@@ -1,6 +1,8 @@
 package br.com.luizamaral.mercado_tech.domain;
 
 import jakarta.persistence.*;
+
+@Entity
 @Table(name = "municipios")
 public class Municipio {
     
