@@ -1,12 +1,12 @@
 CREATE TABLE admissoes (
     id                  BIGSERIAL PRIMARY KEY,
-    municipio_id        INTEGER NOT NULL REFERENCES municipios(id),
-    cbo_id              INTEGER NOT NULL REFERENCES cbo_ocupacoes(id),
+    municipio_id        BIGINT NOT NULL REFERENCES municipios(id),
+    cbo_id              BIGINT NOT NULL REFERENCES cbo_ocupacoes(id),
     competencia         DATE NOT NULL,
     tipo_movimentacao   VARCHAR(20) NOT NULL,
-    salario              NUMERIC(10,2),
+    salario             NUMERIC(10,2),
     grau_instrucao      VARCHAR(50),
-    sexo                CHAR(1),
+    sexo                VARCHAR(1),
     idade               SMALLINT,
     tipo_empregador     VARCHAR(50),
     criado_em           TIMESTAMP DEFAULT NOW()

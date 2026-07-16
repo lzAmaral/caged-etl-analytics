@@ -2,6 +2,13 @@ package br.com.luizamaral.mercado_tech.domain;
 
 import jakarta.persistence.*;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "municipios")
 public class Municipio {

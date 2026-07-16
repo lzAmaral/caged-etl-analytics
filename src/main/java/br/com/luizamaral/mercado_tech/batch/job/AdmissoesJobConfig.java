@@ -52,7 +52,7 @@ public class AdmissoesJobConfig {
     public ItemReader<AdmissaoCagedDTO> reader() {
         // BeanWrapperFieldSetMapper mapeia colunas do CSV para campos do DTO via reflexão.
         // Os nomes em .names() devem coincidir com os setters do AdmissaoCagedDTO.
-        // Separador ";" é o padrão do Novo CAGED.
+        // Separador "," obtido da Base dos Dados.
         BeanWrapperFieldSetMapper<AdmissaoCagedDTO> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(AdmissaoCagedDTO.class);
 
@@ -61,7 +61,7 @@ public class AdmissoesJobConfig {
                 .resource(new FileSystemResource(csvPath))
                 .linesToSkip(1) // pula o cabeçalho
                 .delimited()
-                .delimiter(";")
+                .delimiter(",")
                 // Ajuste esses nomes para corresponder ao cabeçalho exato do seu CSV:
                 .names("codigoMunicipio", "codigoCbo", "competencia", "tipoMovimentacao",
                        "salario", "grauInstrucao", "sexo", "idade", "tipoEmpregador")

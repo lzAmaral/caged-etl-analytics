@@ -1,8 +1,8 @@
 CREATE TABLE municipios (
-    id              SERIAL PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     codigo_ibge     VARCHAR(7) NOT NULL UNIQUE,
     nome            VARCHAR(150) NOT NULL,
-    uf              CHAR(2) NOT NULL,
+    uf              VARCHAR(2) NOT NULL,
     regiao          VARCHAR(20)
 );
 

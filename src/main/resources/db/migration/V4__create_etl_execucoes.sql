@@ -1,5 +1,5 @@
 CREATE TABLE etl_execucoes (
-    id                  SERIAL PRIMARY KEY,
+    id                  BIGSERIAL PRIMARY KEY,
     job_name            VARCHAR(100) NOT NULL,
     arquivo_origem      VARCHAR(255),
     linhas_lidas        INTEGER,

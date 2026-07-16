@@ -58,7 +58,7 @@ public class AdmissaoItemProcessor implements ItemProcessor<AdmissaoCagedDTO, Ad
         Optional<Municipio> municipioOpt = municipioRepository.findByCodigoIbge(
                 item.getCodigoMunicipio().trim());
         if (municipioOpt.isEmpty()) {
-            log.warn("Linha rejeitada — município não encontrado: codigoIbge={}", item.getCodigoMunicipio());
+            log.debug("Linha rejeitada — município não encontrado: codigoIbge={}", item.getCodigoMunicipio());
             return null;
         }
 
@@ -66,7 +66,7 @@ public class AdmissaoItemProcessor implements ItemProcessor<AdmissaoCagedDTO, Ad
         Optional<CboOcupacao> cboOpt = cboOcupacaoRepository.findByCodigoCbo(
                 item.getCodigoCbo().trim());
         if (cboOpt.isEmpty()) {
-            log.warn("Linha rejeitada — CBO não encontrado: codigoCbo={}", item.getCodigoCbo());
+            log.debug("Linha rejeitada — CBO não encontrado (provavelmente não é TI): codigoCbo={}", item.getCodigoCbo());
             return null;
         }
 
@@ -102,7 +102,7 @@ public class AdmissaoItemProcessor implements ItemProcessor<AdmissaoCagedDTO, Ad
     private LocalDate parseCompetencia(String value) {
         if (isBlank(value)) return null;
         try {
-            return LocalDate.parse(value.trim(), COMPETENCIA_FORMATTER).withDayOfMonth(1);
+            return java.time.YearMonth.parse(value.trim(), COMPETENCIA_FORMATTER).atDay(1);
         } catch (DateTimeParseException e) {
             return null;
         }

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Tech Brasil — Analytics Dashboard</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Folha de estilo customizada -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Cabeçalho -->
+        <header class="app-header">
+            <div class="logo-container">
+                <img src="/logo.png" alt="Mercado Tech Brasil" class="app-logo">
+            </div>
+            <div class="header-actions">
+                <button id="btn-theme-toggle" class="btn-theme" aria-label="Alternar Tema">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <div class="header-badge" id="header-period-badge">Carregando período...</div>
+            </div>
+        </header>
+
+        <!-- Seção de Métricas Principais -->
+        <section class="metrics-grid">
+            <div class="metric-card" id="metric-top-uf">
+                <div class="metric-icon location-icon">📍</div>
+                <div class="metric-info">
+                    <span class="metric-label">UF Líder em TI</span>
+                    <h3 class="metric-value" id="top-uf-value">Carregando...</h3>
+                </div>
+            </div>
+            <div class="metric-card" id="metric-top-salary">
+                <div class="metric-icon salary-icon">💼</div>
+                <div class="metric-info">
+                    <span class="metric-label">Maior Salário de TI</span>
+                    <h3 class="metric-value" id="top-salary-value">Carregando...</h3>
+                </div>
+            </div>
+            <div class="metric-card" id="metric-total-admissions">
+                <div class="metric-icon trends-icon">📈</div>
+                <div class="metric-info">
+                    <span class="metric-label">Total Admissões TI</span>
+                    <h3 class="metric-value" id="total-admissions-value">Carregando...</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid Principal do Dashboard -->
+        <main class="dashboard-grid">
+            
+            <!-- Painel do ETL -->
+            <section class="dashboard-card card-etl" id="panel-etl">
+                <div class="card-header">
+                    <h2>Controle do Pipeline ETL</h2>
+                    <span class="pulse-indicator status-idle" id="etl-status-pulse"></span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Dispare manualmente a carga de dados do CAGED. O backend fará o processamento, limpeza e a carga em lote (batch) no banco PostgreSQL.</p>
+                    
+                    <div class="etl-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Status da Carga:</span>
+                            <span class="stat-value" id="etl-stat-status">Nenhum</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Última Execução:</span>
+                            <span class="stat-value" id="etl-stat-date">Nenhuma</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Linhas Lidas:</span>
+                            <span class="stat-value" id="etl-stat-read">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Linhas Processadas:</span>
+                            <span class="stat-value" id="etl-stat-processed">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Linhas Rejeitadas:</span>
+                            <span class="stat-value" id="etl-stat-rejected">0</span>
+                        </div>
+                    </div>
+                    
+                    <button id="btn-trigger-etl" class="btn-primary">
+                        <span class="btn-text">Disparar Carga ETL</span>
+                        <div class="spinner" id="etl-spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Filtros de Análise -->
+            <section class="dashboard-card card-filters" id="panel-filters">
+                <div class="card-header">
+                    <h2>Filtros de Análise</h2>
+                    <span class="subtitle">Refine os dados em tempo real</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">Selecione o Estado ou o Cargo de Tecnologia para focar suas análises nos gráficos abaixo.</p>
+                    
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label for="select-uf" class="filter-label">Estado (UF)</label>
+                            <select id="select-uf" class="filter-select">
+                                <option value="ALL">Todos os Estados (ALL)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="select-cbo" class="filter-label">Cargo (Ocupação)</label>
+                            <select id="select-cbo" class="filter-select">
+                                <option value="ALL">Todos os Cargos (ALL)</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="select-seniority" class="filter-label">Nível (Senioridade)</label>
+                            <select id="select-seniority" class="filter-select">
+                                <option value="ALL">Comparativo Completo (Todos)</option>
+                                <option value="MEDIA">Média Geral</option>
+                                <option value="JUNIOR">Júnior (Percentil 25)</option>
+                                <option value="PLENO">Pleno (Mediana)</option>
+                                <option value="SENIOR">Sênior (Percentil 75)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ranking de UFs -->
+            <section class="dashboard-card card-chart" id="panel-ranking-uf">
+                <div class="card-header">
+                    <h2>Ranking de UFs em TI</h2>
+                    <span class="subtitle">Admissões em ocupações de tecnologia</span>
+                </div>
+                <div class="card-body chart-container">
+                    <canvas id="chart-ranking-uf"></canvas>
+                </div>
+            </section>
+
+            <!-- Tendências Salariais -->
+            <section class="dashboard-card card-chart" id="panel-salary-trends">
+                <div class="card-header">
+                    <h2>Salário Médio por Cargo</h2>
+                    <span class="subtitle">Média de contratação em 2024</span>
+                </div>
+                <div class="card-body chart-container">
+                    <canvas id="chart-salary-trends"></canvas>
+                </div>
+            </section>
+
+            <!-- Evolução de Vagas por Região -->
+            <section class="dashboard-card card-chart card-fullwidth" id="panel-hiring-by-region">
+                <div class="card-header">
+                    <h2>Saldo de Empregos por Região</h2>
+                    <span class="subtitle">Admissões vs Desligamentos mensal</span>
+                </div>
+                <div class="card-body chart-container">
+                    <canvas id="chart-hiring-by-region"></canvas>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Mercado Tech Brasil © 2026. Processamento distribuído com Spring Batch e PostgreSQL.</p>
+        </footer>
+    </div>
+    <!-- Script principal de inicialização -->
+    <script src="app.js"></script>
+</body>
+</html>
